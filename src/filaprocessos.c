@@ -17,16 +17,19 @@ typedef struct _filaProcessos {
 } FilaProcessos;
 
 void FilaProcessosPrint(FilaProcessos *fila) {
-
-    Processo* processo = fila->primeiroProcesso;
-
-    printf("\nfila ->");
-    while(processo != NULL) {
-        printf(" %d -> ", processo->id);
-        processo = processo->prox; 
+    if(fila->tamanho > 0) {
+        Processo* processo = fila->primeiroProcesso;
+    
+        printf("\nfila ->");
+        while(processo != NULL) {
+            printf(" %d -> ", processo->id);
+            processo = processo->prox; 
+        }
+    
+        printf("END");
+    } else {
+        printf("\nFILA NÃO POSSUI PROCESSOS\n");
     }
-
-    printf("END");
 }
 
 FilaProcessos* criaFila() {
@@ -74,6 +77,14 @@ FilaProcessos* destroiFila(FilaProcessos** fila) {
     *fila = NULL;
 
     return NULL;
+}
+
+void resetaFila(FilaProcessos* fila) {
+    if(!fila)
+        return;
+    
+    fila->primeiroProcesso = fila->ultimoProcesso = NULL;
+    fila->tamanho = 0;
 }
 
 Processo* adicionaFila(FilaProcessos* fila, int id, float tempo, int prioridade, int ciclos) {
@@ -171,13 +182,18 @@ void escalonador(FilaProcessos* fila, int quantidadeProcessos) {
         matrizAuxiliar[i] = buscaProcesso(fila, i);
     }
 
-    printf("\nMATRIZ ANTES DO MERGE SORT:\n");
-    imprimeMatrizDeProcessos(matrizAuxiliar, quantidadeProcessos);
-    
+    liberaFila(fila);
     mergeSort(matrizAuxiliar, 0, quantidadeProcessos-1);
 
-    printf("\nMATRIZ DEPOIS DO MERGE SORT:\n");
-    imprimeMatrizDeProcessos(matrizAuxiliar, quantidadeProcessos);
+    for(int j = 0; j < quantidadeProcessos; j++) {
+        adicionaFila(
+                        fila, 
+                        matrizAuxiliar[j]->id,
+                        matrizAuxiliar[j]->tempo,
+                        matrizAuxiliar[j]->prioridade,
+                        matrizAuxiliar[j]->ciclos
+                    );
+    }
 }
 
 

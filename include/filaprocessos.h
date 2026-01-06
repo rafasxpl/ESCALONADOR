@@ -13,6 +13,9 @@ Processo* criaProcesso(int id, float tempo, int prioridade, int ciclos);
 // DESTROI FILA_PROCESSOS
 FilaProcessos* destroiFila(FilaProcessos** fila);
 
+// RESETA A FILA (FAZ COM QUE NÃO APONTE A NENHUM PROCESSO), MAS NÃO A DESTROI
+void resetaFila(FilaProcessos* fila);
+
 // ADICIONA PROCESSO À FILA_PROCESSOS
 Processo* adicionaFila(FilaProcessos* fila, int id, float tempo, int prioridade, int ciclos);
 
