@@ -1,4 +1,4 @@
-#include "insertion.h"
+#include "structs.h"
 #include<stdio.h>
 
 void printVetor(int* v, int size) {

@@ -4,19 +4,7 @@
 #include "filaprocessos.h"
 #include "merge.h"
 #include "insertion.h"
-typedef struct _processo {
-    int id;
-    float tempo;
-    int prioridade;
-    int ciclos;
-    struct _processo* prox;
-} Processo;
-
-typedef struct _filaProcessos {
-    Processo* primeiroProcesso;
-    Processo* ultimoProcesso;
-    int tamanho;    
-} FilaProcessos;
+#include "structs.h"
 
 FilaProcessos* criaFila() {
     FilaProcessos* fila = (FilaProcessos*)calloc(1, sizeof(FilaProcessos));

@@ -1,5 +1,6 @@
 #include<stdlib.h>
 #include "merge.h"
+#include "structs.h"
 
 void merge(Processo** matrizAuxiliar, int inicio, int meio, int fim) {
     int tamanhoVetorEsquerda = meio - inicio + 1;
