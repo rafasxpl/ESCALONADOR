@@ -8,6 +8,8 @@ CC = gcc
 
 FLAGS = -I $(INCLUDE) 
 
+TARGET = $(BIN)/tp
+
 all: clean object app run
 
 object: $(OBJ)/merge.o $(OBJ)/insertion.o $(OBJ)/filaprocessos.o
@@ -19,6 +21,9 @@ clean:
 
 run: 
 	$(BIN)/tp
+
+valgrind: $(TARGET)
+	valgrind --leak-check=full $(TARGET)
 
 $(OBJ)/%.o: $(SRC)/%.c
 	$(CC) -c $< $(FLAGS) -o $@
