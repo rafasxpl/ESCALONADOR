@@ -1,32 +1,19 @@
-#include "filaprocessos.h"
 #include<stdio.h>
 #include<stdlib.h>
-
-typedef struct _processo {
-    int id;
-    float tempo;
-    int prioridade;
-    int ciclos;
-    struct _processo* prox;
-} Processo;
-
-typedef struct _filaProcessos {
-    Processo* primeiroProcesso;
-    Processo* ultimoProcesso;
-    int tamanho;    
-} FilaProcessos;
+#include<stdbool.h>
+#include "filaprocessos.h"
+#include "merge.h"
+#include "insertion.h"
 
 void FilaProcessosPrint(FilaProcessos *fila) {
     if(fila->tamanho > 0) {
         Processo* processo = fila->primeiroProcesso;
     
-        printf("\nfila ->");
+        printf("\n");
         while(processo != NULL) {
-            printf(" %d -> ", processo->id);
+            printf("%d %d %d\n", processo->id, processo->prioridade, processo->ciclos);
             processo = processo->prox; 
         }
-    
-        printf("END");
     } else {
         printf("\nFILA NÃO POSSUI PROCESSOS\n");
     }
@@ -132,48 +119,45 @@ Processo* buscaProcesso(FilaProcessos* fila, int i) {
     return _next;
 }
 
-void merge(Processo** matrizAuxiliar, int inicio, int meio, int fim) {
-    int tamanhoVetorEsquerda = meio - inicio + 1;
-    int tamanhoVetorDireita = fim - meio;
-
-    Processo** vetorEsquerda = (Processo**)calloc(tamanhoVetorEsquerda, sizeof(Processo));
-    Processo** vetorDireita  = (Processo**)calloc(tamanhoVetorDireita, sizeof(Processo));
-
-    int topoVetorEsquerda = 0;
-    int topoVetorDireita  = 0;
-
-    for(int i = 0; i < tamanhoVetorEsquerda; i++)
-        vetorEsquerda[i] = matrizAuxiliar[i+inicio];
-
-    for(int j = 0; j < tamanhoVetorDireita; j++)
-        vetorDireita[j] = matrizAuxiliar[j + meio + 1];
-
-    for(int k = inicio; k <= fim; k++) {
-        if(topoVetorEsquerda >= tamanhoVetorEsquerda)
-            matrizAuxiliar[k] = vetorDireita[topoVetorDireita++];
-        else if(topoVetorDireita >= tamanhoVetorDireita)
-            matrizAuxiliar[k] = vetorEsquerda[topoVetorEsquerda++];
-        else if(vetorEsquerda[topoVetorEsquerda]->prioridade <= vetorDireita[topoVetorDireita]->prioridade && 
-                vetorEsquerda[topoVetorEsquerda]->tempo <= vetorDireita[topoVetorDireita]->tempo)
-            matrizAuxiliar[k] = vetorEsquerda[topoVetorEsquerda++];
-        else 
-            matrizAuxiliar[k] = vetorDireita[topoVetorDireita++];
+bool resolveProcesso(FilaProcessos*fila, Processo* processo) {
+    int x = 100;
+    if(processo->ciclos > 0 && processo->ciclos <= 100) {
+        adicionaFila(
+            fila,
+            processo->id,
+            processo->tempo,
+            processo->prioridade,
+            processo->ciclos
+        );
+        processo->ciclos -= x;
+        fila->tamanho++;
+        return true;
     }
+    
+    
+    adicionaFila(
+        fila,
+        processo->id,
+        processo->tempo,
+        processo->prioridade,
+        x
+    );
+    
+    processo->ciclos -= x;
+    processo->prioridade++;
+    fila->tamanho++;
 
-    free(vetorDireita);
-    free(vetorEsquerda);
+    return false;
 }
 
-void mergeSort(Processo** matrizAuxiliar, int inicio, int fim) {
-    if(inicio < fim) {
-        int meio = (inicio + fim) / 2;
-
-        mergeSort(matrizAuxiliar, inicio, meio);
-        mergeSort(matrizAuxiliar, meio+1, fim);
-
-        merge(matrizAuxiliar, inicio, meio, fim);
+bool existeProcessoValido(Processo** matrizDeProcessos, int quantidadeProcessos) {
+    for(int i = 0; i < quantidadeProcessos; i++) {
+        if(matrizDeProcessos[i]->ciclos > 0)
+            return true;
     }
+    return false;
 }
+
 
 void escalonador(FilaProcessos* fila, int quantidadeProcessos) {
     Processo** matrizAuxiliar = calloc(quantidadeProcessos, sizeof(Processo*));
@@ -182,18 +166,27 @@ void escalonador(FilaProcessos* fila, int quantidadeProcessos) {
         matrizAuxiliar[i] = buscaProcesso(fila, i);
     }
 
-    liberaFila(fila);
+    resetaFila(fila);
     mergeSort(matrizAuxiliar, 0, quantidadeProcessos-1);
+    // imprimeMatrizDeProcessos(matrizAuxiliar, quantidadeProcessos);
 
-    for(int j = 0; j < quantidadeProcessos; j++) {
-        adicionaFila(
-                        fila, 
-                        matrizAuxiliar[j]->id,
-                        matrizAuxiliar[j]->tempo,
-                        matrizAuxiliar[j]->prioridade,
-                        matrizAuxiliar[j]->ciclos
-                    );
+    bool result = false;
+    int indiceProcessoValido = 0;
+
+    while(existeProcessoValido(matrizAuxiliar, quantidadeProcessos)) {
+        for(int i = 0; i < quantidadeProcessos; i++) {
+            if(matrizAuxiliar[i]->ciclos > 0) {
+                indiceProcessoValido = i;
+                break;
+            }    
+        }
+        result = resolveProcesso(fila, matrizAuxiliar[indiceProcessoValido]);
+
+        if(result == false) {
+            insertionSort(matrizAuxiliar, quantidadeProcessos);
+        }
     }
+    FilaProcessosPrint(fila);
 }
 
 

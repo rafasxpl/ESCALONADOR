@@ -55,3 +55,8 @@ dkms.conf
 *.dwo
 
 *.pdf
+binaries/*
+obj/
+
+to-do.md
+

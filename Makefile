@@ -1,15 +1,16 @@
 APP = ./app
-BIN = ./bin
+BIN = ./binaries
 INCLUDE = ./include
 OBJ = ./obj
 SRC = ./src
 
 CC = gcc
-FLAGS = -I $(INCLUDE)
+
+FLAGS = -I $(INCLUDE) 
 
 all: clean object app run
 
-object: $(OBJ)/filaprocessos.o
+object: $(OBJ)/merge.o $(OBJ)/insertion.o $(OBJ)/filaprocessos.o
 app: $(BIN)/tp
 
 clean:
@@ -20,7 +21,7 @@ run:
 	$(BIN)/tp
 
 $(OBJ)/%.o: $(SRC)/%.c
-	$(CC) -c $(FLAGS) $< -o $@
+	$(CC) -c $< $(FLAGS) -o $@
 
 $(BIN)/tp: $(APP)/tp.c $(OBJ)/filaprocessos.o
-	$(CC) $(FLAGS) $< $(OBJ)/filaprocessos.o -o $@
+	$(CC) $< $(OBJ)/filaprocessos.o $(OBJ)/merge.o $(OBJ)/insertion.o $(FLAGS) -o $@
