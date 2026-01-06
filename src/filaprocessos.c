@@ -5,7 +5,7 @@
 #include "merge.h"
 #include "insertion.h"
 
-void FilaProcessosPrint(FilaProcessos *fila) {
+void imprimeLog(FilaProcessos *fila) {
     if(fila->tamanho > 0) {
         Processo* processo = fila->primeiroProcesso;
     
@@ -186,7 +186,7 @@ void escalonador(FilaProcessos* fila, int quantidadeProcessos) {
             insertionSort(matrizAuxiliar, quantidadeProcessos);
         }
     }
-    FilaProcessosPrint(fila);
+    imprimeLog(fila);
 }
 
 

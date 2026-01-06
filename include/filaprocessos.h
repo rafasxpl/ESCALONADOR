@@ -34,10 +34,7 @@ void resetaFila(FilaProcessos* fila);
 Processo* adicionaFila(FilaProcessos* fila, int id, float tempo, int prioridade, int ciclos);
 
 // IMPRIME O LOG DA CPU
-void imprimeLog();
-
-// EXIBE O CONTEÚDO DA FILA DE PROCESSOS
-void FilaProcessosPrint(FilaProcessos *fila);
+void imprimeLog(FilaProcessos *fila);
 
 // EXIBE O CONTEÚDO DE UM PROCESSO
 void imprimeProcesso(Processo* processo);
