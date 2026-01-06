@@ -34,10 +34,11 @@ A primeira linha contém o número `N` de processos. As linhas seguintes contêm
 
 Exemplo:
 ```bash
-3
-1256 0.02 4 70
-1546 0.04 2 250
-2548 0.05 2 60
+4
+1001 1.0 10 50
+2002 2.0 1 50
+3003 3.0 5 50
+4004 0.5 5 50
 ```
 
 **Saída (Log)**
@@ -46,10 +47,10 @@ O programa imprime a ordem de execução, a prioridade no momento da execução 
 Exemplo:
 ```bash
 Log CPU:
-1546 2 100
-2548 2 60
-1546 3 100
-...
+4004 5 50
+2002 1 50
+3003 5 50
+1001 10 50
 ```
 
 ## 🔍Verificação de Memória
