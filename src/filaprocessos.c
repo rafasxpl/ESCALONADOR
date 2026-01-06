@@ -4,20 +4,19 @@
 #include "filaprocessos.h"
 #include "merge.h"
 #include "insertion.h"
+typedef struct _processo {
+    int id;
+    float tempo;
+    int prioridade;
+    int ciclos;
+    struct _processo* prox;
+} Processo;
 
-void imprimeLog(FilaProcessos *fila) {
-    if(fila->tamanho > 0) {
-        Processo* processo = fila->primeiroProcesso;
-    
-        printf("\n");
-        while(processo != NULL) {
-            printf("%d %d %d\n", processo->id, processo->prioridade, processo->ciclos);
-            processo = processo->prox; 
-        }
-    } else {
-        printf("\nFILA NÃO POSSUI PROCESSOS\n");
-    }
-}
+typedef struct _filaProcessos {
+    Processo* primeiroProcesso;
+    Processo* ultimoProcesso;
+    int tamanho;    
+} FilaProcessos;
 
 FilaProcessos* criaFila() {
     FilaProcessos* fila = (FilaProcessos*)calloc(1, sizeof(FilaProcessos));
@@ -48,6 +47,24 @@ Processo* criaProcesso(int id, float tempo, int prioridade, int ciclos) {
     return processo;
 }
 
+Processo* adicionaFila(FilaProcessos* fila, int id, float tempo, int prioridade, int ciclos) {
+    if(!fila) {
+        printf("ERRO. FILA NÃO EXISTE\n");
+        return NULL;
+    }
+
+    Processo* processo = criaProcesso(id, tempo, prioridade, ciclos);
+    
+    if(fila->tamanho == 0) {
+        fila->primeiroProcesso = fila->ultimoProcesso = processo;
+        fila->tamanho++;
+    } else {
+        fila->ultimoProcesso->prox = processo;
+        fila->ultimoProcesso = processo;
+        fila->tamanho++;
+    }
+}
+
 FilaProcessos* destroiFila(FilaProcessos** fila) {
     if(!fila)
         return NULL;
@@ -74,21 +91,17 @@ void resetaFila(FilaProcessos* fila) {
     fila->tamanho = 0;
 }
 
-Processo* adicionaFila(FilaProcessos* fila, int id, float tempo, int prioridade, int ciclos) {
-    if(!fila) {
-        printf("ERRO. FILA NÃO EXISTE\n");
-        return NULL;
-    }
-
-    Processo* processo = criaProcesso(id, tempo, prioridade, ciclos);
+void imprimeLog(FilaProcessos *fila) {
+    if(fila->tamanho > 0) {
+        Processo* processo = fila->primeiroProcesso;
     
-    if(fila->tamanho == 0) {
-        fila->primeiroProcesso = fila->ultimoProcesso = processo;
-        fila->tamanho++;
+        printf("\n");
+        while(processo != NULL) {
+            printf("%d %d %d\n", processo->id, processo->prioridade, processo->ciclos);
+            processo = processo->prox; 
+        }
     } else {
-        fila->ultimoProcesso->prox = processo;
-        fila->ultimoProcesso = processo;
-        fila->tamanho++;
+        printf("\nFILA NÃO POSSUI PROCESSOS\n");
     }
 }
 
@@ -158,7 +171,6 @@ bool existeProcessoValido(Processo** matrizDeProcessos, int quantidadeProcessos)
     return false;
 }
 
-
 void escalonador(FilaProcessos* fila, int quantidadeProcessos) {
     Processo** matrizAuxiliar = calloc(quantidadeProcessos, sizeof(Processo*));
 
@@ -168,7 +180,6 @@ void escalonador(FilaProcessos* fila, int quantidadeProcessos) {
 
     resetaFila(fila);
     mergeSort(matrizAuxiliar, 0, quantidadeProcessos-1);
-    // imprimeMatrizDeProcessos(matrizAuxiliar, quantidadeProcessos);
 
     bool result = false;
     int indiceProcessoValido = 0;
@@ -188,12 +199,4 @@ void escalonador(FilaProcessos* fila, int quantidadeProcessos) {
     }
     imprimeLog(fila);
 }
-
-
-
-
-
-
-
-
 

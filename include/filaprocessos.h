@@ -4,20 +4,6 @@
 typedef struct _processo Processo;
 typedef struct _filaProcessos FilaProcessos;
 
-typedef struct _processo {
-    int id;
-    float tempo;
-    int prioridade;
-    int ciclos;
-    struct _processo* prox;
-} Processo;
-
-typedef struct _filaProcessos {
-    Processo* primeiroProcesso;
-    Processo* ultimoProcesso;
-    int tamanho;    
-} FilaProcessos;
-
 // CRIA FILA_PROCESSOS
 FilaProcessos* criaFila();
 
@@ -26,9 +12,6 @@ Processo* criaProcesso(int id, float tempo, int prioridade, int ciclos);
 
 // DESTROI FILA_PROCESSOS
 FilaProcessos* destroiFila(FilaProcessos** fila);
-
-// RESETA A FILA (FAZ COM QUE NÃO APONTE A NENHUM PROCESSO), MAS NÃO A DESTROI
-void resetaFila(FilaProcessos* fila);
 
 // ADICIONA PROCESSO À FILA_PROCESSOS
 Processo* adicionaFila(FilaProcessos* fila, int id, float tempo, int prioridade, int ciclos);
