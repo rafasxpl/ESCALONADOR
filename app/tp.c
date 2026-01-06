@@ -18,9 +18,8 @@ int main() {
         adicionaFila(fila, id, tempo, prioridade, ciclos);
     }
 
-    // FilaProcessosPrint(fila);
     escalonador(fila, quantidadeProcessos);
-    // FilaProcessosPrint(fila);
+    imprimeLog(fila);
 
-    // destroiFila(&fila);
+    destroiFila(&fila);
 }

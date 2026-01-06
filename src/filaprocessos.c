@@ -42,7 +42,7 @@ Processo* adicionaFila(FilaProcessos* fila, int id, float tempo, int prioridade,
     }
 
     Processo* processo = criaProcesso(id, tempo, prioridade, ciclos);
-    
+        
     if(fila->tamanho == 0) {
         fila->primeiroProcesso = fila->ultimoProcesso = processo;
         fila->tamanho++;
@@ -159,6 +159,13 @@ bool existeProcessoValido(Processo** matrizDeProcessos, int quantidadeProcessos)
     return false;
 }
 
+void destroiMatrizAuxiliar(Processo** matrizAuxiliar, int n) {
+    for(int i = 0; i < n; i++)
+        free(matrizAuxiliar[i]);
+
+    free(matrizAuxiliar);
+}
+
 void escalonador(FilaProcessos* fila, int quantidadeProcessos) {
     Processo** matrizAuxiliar = calloc(quantidadeProcessos, sizeof(Processo*));
 
@@ -185,6 +192,7 @@ void escalonador(FilaProcessos* fila, int quantidadeProcessos) {
             insertionSort(matrizAuxiliar, quantidadeProcessos);
         }
     }
-    imprimeLog(fila);
+
+    destroiMatrizAuxiliar(matrizAuxiliar, quantidadeProcessos);
 }
 
