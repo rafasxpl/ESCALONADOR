@@ -35,9 +35,29 @@ Processo* criaProcesso(int id, float tempo, int prioridade, int ciclos) {
     return processo;
 }
 
+bool processoInvalido(Processo* processo) {
+    if(processo->ciclos < 0 || processo->tempo < 0.0f)
+        return true;
+    return false;
+}
+
+bool filaInvalida(FilaProcessos* fila) {
+    if(fila == NULL || fila->tamanho < 0)
+        return true;
+
+    if(fila->tamanho == 0) {
+        if(fila->primeiroProcesso != NULL || fila->ultimoProcesso != NULL)
+            return true;
+    } else {
+        if(fila->primeiroProcesso == NULL || fila->ultimoProcesso == NULL)
+            return true;
+    }
+    return false;
+}
+
 Processo* adicionaFila(FilaProcessos* fila, int id, float tempo, int prioridade, int ciclos) {
-    if(!fila) {
-        printf("ERRO. FILA NÃO EXISTE\n");
+    if(filaInvalida(fila)) {
+        printf("ERRO. FILA INVÁLIDA\n");
         return NULL;
     }
 
@@ -45,17 +65,20 @@ Processo* adicionaFila(FilaProcessos* fila, int id, float tempo, int prioridade,
         
     if(fila->tamanho == 0) {
         fila->primeiroProcesso = fila->ultimoProcesso = processo;
-        fila->tamanho++;
     } else {
         fila->ultimoProcesso->prox = processo;
         fila->ultimoProcesso = processo;
-        fila->tamanho++;
     }
+    fila->tamanho++;
+
+    return processo;
 }
 
 FilaProcessos* destroiFila(FilaProcessos** fila) {
-    if(!fila)
+   if(filaInvalida(fila)) {
+        printf("ERRO. FILA INVÁLIDA\n");
         return NULL;
+    }
     
     Processo* _proxProcesso = (*fila)->primeiroProcesso;
     Processo* _prevProcesso = NULL;
@@ -72,14 +95,21 @@ FilaProcessos* destroiFila(FilaProcessos** fila) {
 }
 
 void resetaFila(FilaProcessos* fila) {
-    if(!fila)
-        return;
+    if(filaInvalida(fila)) {
+        printf("ERRO. FILA INVÁLIDA\n");
+        return NULL;
+    }
     
     fila->primeiroProcesso = fila->ultimoProcesso = NULL;
     fila->tamanho = 0;
 }
 
 void imprimeLog(FilaProcessos *fila) {
+    if(filaInvalida(fila)) {
+        printf("ERRO. FILA INVÁLIDA\n");
+        return NULL;
+    }
+
     if(fila->tamanho > 0) {
         Processo* processo = fila->primeiroProcesso;
     
@@ -94,6 +124,11 @@ void imprimeLog(FilaProcessos *fila) {
 }
 
 void imprimeProcesso(Processo* processo) {
+    if(processoInvalido(processo)) {
+        printf("ERRO. PROCESSO INVÁLIDO\n");
+        return NULL;
+    }
+
     printf("\n\nID: %d\n", processo->id);
     printf("TEMPO: %.2f\n", processo->tempo);
     printf("PRIORIDADE: %d\n", processo->prioridade);
@@ -111,8 +146,16 @@ void imprimeMatrizDeProcessos(Processo** matrizDeProcessos, int quantidadeProces
 }
 
 Processo* buscaProcesso(FilaProcessos* fila, int i) {
-    Processo* _next = fila->primeiroProcesso; // USO DOIS PONTEIROS PRA EVITAR QUE O PROCESSO RETORNADO SEJA O i+1 ao invés do i
-    Processo* _prev = NULL;
+    if(filaInvalida(fila)) {
+        printf("ERRO. FILA INVÁLIDA\n");
+        return NULL;
+    }
+    if(i >= fila->tamanho) {
+        printf("ERRO. INDICE INVÁLIDO\n");
+        return NULL;
+    }
+
+    Processo* _next = fila->primeiroProcesso;
 
     for(int j = 0; j < i; j++) {
         _next = _next->prox;
@@ -121,6 +164,15 @@ Processo* buscaProcesso(FilaProcessos* fila, int i) {
 }
 
 bool resolveProcesso(FilaProcessos*fila, Processo* processo) {
+    if(filaInvalida(fila)) {
+        printf("ERRO. FILA INVÁLIDA\n");
+        return NULL;
+    }
+    if(processoInvalido(processo)) {
+        printf("ERRO. PROCESSO INVÁLIDO\n");
+        return NULL;
+    }
+    
     int x = 100;
     if(processo->ciclos > 0 && processo->ciclos <= 100) {
         adicionaFila(
@@ -131,7 +183,6 @@ bool resolveProcesso(FilaProcessos*fila, Processo* processo) {
             processo->ciclos
         );
         processo->ciclos -= x;
-        fila->tamanho++;
         return true;
     }
     
@@ -146,7 +197,6 @@ bool resolveProcesso(FilaProcessos*fila, Processo* processo) {
     
     processo->ciclos -= x;
     processo->prioridade++;
-    fila->tamanho++;
 
     return false;
 }
@@ -167,6 +217,11 @@ void destroiMatrizAuxiliar(Processo** matrizAuxiliar, int n) {
 }
 
 void escalonador(FilaProcessos* fila, int quantidadeProcessos) {
+    if(filaInvalida(fila)) {
+        printf("ERRO. FILA INVÁLIDA\n");
+        return NULL;
+    }
+
     Processo** matrizAuxiliar = calloc(quantidadeProcessos, sizeof(Processo*));
 
     for(int i = 0; i < quantidadeProcessos; i++){
