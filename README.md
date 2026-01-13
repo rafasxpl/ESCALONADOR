@@ -19,12 +19,12 @@ Com isso em mãos, formulamos as regras:
 ## ⚙️ Estrutura do projeto
 O código foi modularizado conforme especificado, separando interface e implementação:
 
-`app/` - Contém o arquivo main que chama as funções criadas
-`binaries` - Guarda os executáveis gerados a partir da compilação de `./app/tp.c`
-`include/` - Contém os arquivos de cabeçalho com as assinaturas das funções
-`src/` - Guarda as implementações dos arquivos `.h` de `./include`
-`obj/` - Possui os arquivos objeto `.o` gerados a partir da compilação dos arquivos de implementação de `./src/`
-`Makefile` - Usado pra compilar e executar o projeto de forma mais simples
+`app/` - Contém o arquivo main que chama as funções criadas \
+`binaries` - Guarda os executáveis gerados a partir da compilação de `./app/tp.c` \
+`include/` - Contém os arquivos de cabeçalho com as assinaturas das funções \
+`src/` - Guarda as implementações dos arquivos `.h` de `./include` \
+`obj/` - Possui os arquivos objeto `.o` gerados a partir da compilação dos arquivos de implementação de `./src/` \
+`Makefile` - Usado pra compilar e executar o projeto de forma mais simples \
 
 
 ## 📄 Formato de entrada e saída dos dados
