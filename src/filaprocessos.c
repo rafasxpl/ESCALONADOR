@@ -42,7 +42,7 @@ bool processoInvalido(Processo* processo) {
 }
 
 bool filaInvalida(FilaProcessos* fila) {
-    if(fila == NULL || fila->tamanho < 0)
+    if(filaInvalida(fila) || fila->tamanho < 0)
         return true;
 
     if(fila->tamanho == 0) {
@@ -75,7 +75,7 @@ Processo* adicionaFila(FilaProcessos* fila, int id, float tempo, int prioridade,
 }
 
 FilaProcessos* destroiFila(FilaProcessos** fila) {
-   if(filaInvalida(fila)) {
+   if(filaInvalida(*fila)) {
         printf("ERRO. FILA INVÁLIDA\n");
         return NULL;
     }
@@ -97,42 +97,40 @@ FilaProcessos* destroiFila(FilaProcessos** fila) {
 void resetaFila(FilaProcessos* fila) {
     if(filaInvalida(fila)) {
         printf("ERRO. FILA INVÁLIDA\n");
-        return NULL;
+    } else {
+        fila->primeiroProcesso = fila->ultimoProcesso = NULL;
+        fila->tamanho = 0;
     }
-    
-    fila->primeiroProcesso = fila->ultimoProcesso = NULL;
-    fila->tamanho = 0;
 }
 
 void imprimeLog(FilaProcessos *fila) {
     if(filaInvalida(fila)) {
         printf("ERRO. FILA INVÁLIDA\n");
-        return NULL;
-    }
-
-    if(fila->tamanho > 0) {
-        Processo* processo = fila->primeiroProcesso;
-    
-        printf("\n");
-        while(processo != NULL) {
-            printf("%d %d %d\n", processo->id, processo->prioridade, processo->ciclos);
-            processo = processo->prox; 
-        }
     } else {
-        printf("\nFILA NÃO POSSUI PROCESSOS\n");
+        if(fila->tamanho > 0) {
+            Processo* processo = fila->primeiroProcesso;
+        
+            printf("\n");
+            while(processo != NULL) {
+                printf("%d %d %d\n", processo->id, processo->prioridade, processo->ciclos);
+                processo = processo->prox; 
+            }
+        } else {
+            printf("\nFILA NÃO POSSUI PROCESSOS\n");
+        }
     }
 }
 
 void imprimeProcesso(Processo* processo) {
     if(processoInvalido(processo)) {
         printf("ERRO. PROCESSO INVÁLIDO\n");
-        return NULL;
+    } else {
+        printf("\n\nID: %d\n", processo->id);
+        printf("TEMPO: %.2f\n", processo->tempo);
+        printf("PRIORIDADE: %d\n", processo->prioridade);
+        printf("CICLOS: %d\n", processo->ciclos);
     }
 
-    printf("\n\nID: %d\n", processo->id);
-    printf("TEMPO: %.2f\n", processo->tempo);
-    printf("PRIORIDADE: %d\n", processo->prioridade);
-    printf("CICLOS: %d\n", processo->ciclos);
 }
 
 void imprimeMatrizDeProcessos(Processo** matrizDeProcessos, int quantidadeProcessos) {
@@ -219,35 +217,34 @@ void destroiMatrizAuxiliar(Processo** matrizAuxiliar, int n) {
 void escalonador(FilaProcessos* fila, int quantidadeProcessos) {
     if(filaInvalida(fila)) {
         printf("ERRO. FILA INVÁLIDA\n");
-        return NULL;
-    }
-
-    Processo** matrizAuxiliar = calloc(quantidadeProcessos, sizeof(Processo*));
-
-    for(int i = 0; i < quantidadeProcessos; i++){
-        matrizAuxiliar[i] = buscaProcesso(fila, i);
-    }
-
-    resetaFila(fila);
-    mergeSort(matrizAuxiliar, 0, quantidadeProcessos-1);
-
-    bool result = false;
-    int indiceProcessoValido = 0;
-
-    while(existeProcessoValido(matrizAuxiliar, quantidadeProcessos)) {
-        for(int i = 0; i < quantidadeProcessos; i++) {
-            if(matrizAuxiliar[i]->ciclos > 0) {
-                indiceProcessoValido = i;
-                break;
-            }    
+    } else {
+        Processo** matrizAuxiliar = calloc(quantidadeProcessos, sizeof(Processo*));
+    
+        for(int i = 0; i < quantidadeProcessos; i++){
+            matrizAuxiliar[i] = buscaProcesso(fila, i);
         }
-        result = resolveProcesso(fila, matrizAuxiliar[indiceProcessoValido]);
-
-        if(result == false) {
-            insertionSort(matrizAuxiliar, quantidadeProcessos);
+    
+        resetaFila(fila);
+        mergeSort(matrizAuxiliar, 0, quantidadeProcessos-1);
+    
+        bool result = false;
+        int indiceProcessoValido = 0;
+    
+        while(existeProcessoValido(matrizAuxiliar, quantidadeProcessos)) {
+            for(int i = 0; i < quantidadeProcessos; i++) {
+                if(matrizAuxiliar[i]->ciclos > 0) {
+                    indiceProcessoValido = i;
+                    break;
+                }    
+            }
+            result = resolveProcesso(fila, matrizAuxiliar[indiceProcessoValido]);
+    
+            if(result == false) {
+                insertionSort(matrizAuxiliar, quantidadeProcessos);
+            }
         }
+    
+        destroiMatrizAuxiliar(matrizAuxiliar, quantidadeProcessos);
     }
-
-    destroiMatrizAuxiliar(matrizAuxiliar, quantidadeProcessos);
 }
 
