@@ -1,19 +1,6 @@
 #include "structs.h"
 #include<stdio.h>
 
-void printVetor(int* v, int size) {
-    if(size <= 0) {
-        printf("\n\nVETOR INVÁLIDO\n\n");
-        return;
-    }
-
-    for(int i = 0; i < size; i++) {
-        printf(" %d ", v[i]);
-    }
-
-    printf("\n");
-}
-
 void insertionSort(Processo** matrizAuxiliar, int tamanho) {
     if(tamanho <= 0) {
         printf("\n\nVETOR INVÁLIDO. INSERTION SORT\n\n");

@@ -227,7 +227,7 @@ void escalonador(FilaProcessos* fila, int quantidadeProcessos) {
         resetaFila(fila);
         mergeSort(matrizAuxiliar, 0, quantidadeProcessos-1);
     
-        bool result = false;
+        bool resultado = false;
         int indiceProcessoValido = 0;
     
         while(existeProcessoValido(matrizAuxiliar, quantidadeProcessos)) {
@@ -235,11 +235,11 @@ void escalonador(FilaProcessos* fila, int quantidadeProcessos) {
                 if(matrizAuxiliar[i]->ciclos > 0) {
                     indiceProcessoValido = i;
                     break;
-                }    
+                }
             }
-            result = resolveProcesso(fila, matrizAuxiliar[indiceProcessoValido]);
+            resultado = resolveProcesso(fila, matrizAuxiliar[indiceProcessoValido]);
     
-            if(result == false) {
+            if(resultado == false) {
                 insertionSort(matrizAuxiliar, quantidadeProcessos);
             }
         }
@@ -247,4 +247,3 @@ void escalonador(FilaProcessos* fila, int quantidadeProcessos) {
         destroiMatrizAuxiliar(matrizAuxiliar, quantidadeProcessos);
     }
 }
-

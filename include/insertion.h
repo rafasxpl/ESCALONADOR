@@ -3,6 +3,5 @@
 #include "filaprocessos.h"
 
 void insertionSort(Processo** matrizAuxiliar, int tamanho);
-void printVetor(int* v, int size);
 
 #endif
