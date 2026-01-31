@@ -1,6 +1,8 @@
 #include<stdlib.h>
+#include<stdio.h>
 #include "merge.h"
 #include "structs.h"
+#include "filaprocessos.h"
 
 void merge(Processo** matrizAuxiliar, int inicio, int meio, int fim) {
     int tamanhoVetorEsquerda = meio - inicio + 1;
@@ -24,7 +26,7 @@ void merge(Processo** matrizAuxiliar, int inicio, int meio, int fim) {
         } else if(topoVetorDireita >= tamanhoVetorDireita) {
             matrizAuxiliar[k] = vetorEsquerda[topoVetorEsquerda++];
         } else if(vetorEsquerda[topoVetorEsquerda]->prioridade == vetorDireita[topoVetorDireita]->prioridade){
-            if(vetorEsquerda[topoVetorEsquerda]->tempo < vetorDireita[topoVetorDireita]->tempo){
+            if(vetorEsquerda[topoVetorEsquerda]->tempo <= vetorDireita[topoVetorDireita]->tempo){
                 matrizAuxiliar[k] = vetorEsquerda[topoVetorEsquerda++];
             } else {
                 matrizAuxiliar[k] = vetorDireita[topoVetorDireita++];
@@ -49,4 +51,6 @@ void mergeSort(Processo** matrizAuxiliar, int inicio, int fim) {
 
         merge(matrizAuxiliar, inicio, meio, fim);
     }
+
+    
 }

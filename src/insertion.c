@@ -13,7 +13,7 @@ void insertionSort(Processo** matrizAuxiliar, int tamanho) {
         int j = i - 1;
         aux = matrizAuxiliar[i];
 
-        while(j >= 0 && aux->prioridade <= matrizAuxiliar[j]->prioridade) {
+        while(j >= 0 && aux->prioridade < matrizAuxiliar[j]->prioridade) {
             matrizAuxiliar[j+1] = matrizAuxiliar[j];
             j--;
         }

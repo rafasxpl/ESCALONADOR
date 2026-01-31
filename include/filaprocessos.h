@@ -28,4 +28,7 @@ Processo* buscaProcesso(FilaProcessos* fila, int i);
 // CHAMA A FUNÇÃO QUE SIMULA O ESCALONADOR
 void escalonador(FilaProcessos* fila, int quantidadeProcessos);
 
+// IMPRIME O CONTEÚDO DE UMA FILA
+void imprimeFila(FilaProcessos* fila);
+
 #endif

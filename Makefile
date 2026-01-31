@@ -29,4 +29,4 @@ $(OBJ)/%.o: $(SRC)/%.c
 	$(CC) -c $< $(FLAGS) -o $@
 
 $(BIN)/tp: $(APP)/tp.c $(OBJ)/filaprocessos.o
-	$(CC) $< $(OBJ)/filaprocessos.o $(OBJ)/merge.o $(OBJ)/insertion.o $(FLAGS) -o $@
+	$(CC) -Wall $< $(OBJ)/filaprocessos.o $(OBJ)/merge.o $(OBJ)/insertion.o $(FLAGS) -o $@
